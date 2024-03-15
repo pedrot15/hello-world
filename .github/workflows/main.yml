@@ -16,7 +16,7 @@ jobs:
         run: |
 
           # Get the JSON containing information about the pull request
-          pr_info=$(jq '.pull_request' $GITHUB_EVENT_PATH)
+          pr_info=$(jq '.pull_request.reviews' $GITHUB_EVENT_PATH)
           echo "Pull Request Information: $pr_info"
 
          
@@ -24,8 +24,7 @@ jobs:
       
 
           
-          review_info=$(jq '.reviews[]' $GITHUB_EVENT_PATH)
-          echo " $review_info"
+          
 
 
         
