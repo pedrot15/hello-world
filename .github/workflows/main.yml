@@ -2,6 +2,8 @@ name: Multiple Group Approval
 
 on:
   workflow_dispatch:
+  pull_request_review:
+    types: [submitted]
   pull_request:
     types: [opened]
 
@@ -16,6 +18,8 @@ jobs:
           # Get the JSON containing information about the pull request
           pr_info=$(jq '.pull_request' $GITHUB_EVENT_PATH)
           echo "Pull Request Information: $pr_info"
+
+          run: echo "Review State: ${{ github.event.review }}"
 
       
 
