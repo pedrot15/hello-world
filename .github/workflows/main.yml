@@ -1,0 +1,37 @@
+name: Multiple Group Approval
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  check_approvals:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check approvals
+        id: check_approvals
+        run: |
+
+          # Get the JSON containing information about the approvals
+          approvals_json=$(jq '.reviews[] | {state: .state, author_association: .author_association, author_teams: .author_teams[].name}' $GITHUB_EVENT_PATH)
+          echo "Approvals JSON: $approvals_json"
+
+
+        
+          # Get the number of approvals
+          approvals=$(jq '.review_comments + .approvals + .requested_reviewers' $GITHUB_EVENT_PATH | jq length)
+          
+          # Check if at least two approvals exist
+          if [ $approvals -lt 2 ]; then
+            echo "::error::At least two approvals are required."
+            exit 1
+          fi
+          
+          # Check if at least one approval from the "developers" group and one from the "maintainers" group exist
+          developers_approvals=$(jq '[.reviews[] | select(.state == "APPROVED" and .author_association == "MEMBER" and .author_teams[].name == "developers")] | length' $GITHUB_EVENT_PATH)
+          maintainers_approvals=$(jq '[.reviews[] | select(.state == "APPROVED" and .author_association == "MEMBER" and .author_teams[].name == "maintainers")] | length' $GITHUB_EVENT_PATH)
+          
+          if [ $developers_approvals -lt 1 ] || [ $maintainers_approvals -lt 1 ]; then
+            echo "::error::At least one approval from each group is required."
+            exit 1
+          fi
