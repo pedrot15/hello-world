@@ -17,8 +17,7 @@ jobs:
           pr_info=$(jq  $GITHUB_EVENT_PATH)
           echo "Pull Request Information: $pr_info"
 
-          pr_info= "${{ github.event.pull_request }}"
-          echo "Pull Request Information: $pr_info"
+      
 
           
           #review_info=$(jq '.reviews[]' $GITHUB_EVENT_PATH)
