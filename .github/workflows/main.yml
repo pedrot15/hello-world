@@ -13,9 +13,11 @@ jobs:
         id: check_approvals
         run: |
 
-          # Get the JSON containing information about the approvals
-          approvals_json=$(jq '.reviews[] | {state: .state, author_association: .author_association, author_teams: .author_teams[].name}' $GITHUB_EVENT_PATH)
-          echo "Approvals JSON: $approvals_json"
+          # Get the JSON containing information about the pull request
+          pr_info=$(jq '.pull_request' $GITHUB_EVENT_PATH)
+          echo "Pull Request Information: $pr_info"
+          review_info=$(jq '.reviews[]' $GITHUB_EVENT_PATH)
+          echo " $review_info"
 
 
         
