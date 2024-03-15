@@ -19,7 +19,7 @@ jobs:
           pr_info=$(jq '.pull_request' $GITHUB_EVENT_PATH)
           echo "Pull Request Information: $pr_info"
 
-          run: echo "Review State: ${{ github.event.review.user }}"
+         
 
       
 
